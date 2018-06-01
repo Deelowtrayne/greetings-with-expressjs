@@ -1,0 +1,43 @@
+<div class="container">
+    <header>
+        <h1>Mzantsi Greetings</h1>
+    </header>
+    <div class="main">
+        <form action="/greetings" method="post">
+            <div class="row ">
+                <label for="nameInput">Name:</label>
+                <input class="nameInput" type="text" name="nameInput">
+            </div>
+            <div class="row ">
+                <label for="languageRadio">Language</label>
+
+                <label for="">
+                    <input type="radio" name="languageRadio" value="isixhosa">
+                    <span>IsiXhosa</span>
+                </label>
+
+                <label for="">
+                    <input type="radio" name="languageRadio" value="english">
+                    <span>English</span>
+                </label>
+
+                <label for="">
+                    <input type="radio" name="languageRadio" value="afrikaans">
+                    <span>Afrikaans</span>
+                </label>
+            </div>
+            <!-- Buttons -->
+            <button class="btn btnGreeting" type="submit" name="btnGreeting">Say greeting</button>
+            <button class="btn btnClear" type="reset" name="btnClear">Clear data</button>
+        </form>
+        <div class="row display-section">
+            <div class="greeting-message">
+                {{message}}
+            </div>
+            <div class="counter">
+                Greetings:
+                <span class="counterVal"></span>
+            </div>
+        </div>
+    </div>
+</div>
