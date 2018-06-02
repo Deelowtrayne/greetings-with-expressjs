@@ -18,7 +18,6 @@ describe('Tests the functionality of my greetings app', function(){
     var greeter = Greeting();
     greeter.name('Luvuyo');
     greeter.language('isixhosa');
-
     assert.deepEqual(greeter.greet(), 'Molo, Luvuyo');
   })
   it('Sets the name, adds it to a map and returns the map', function(){

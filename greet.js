@@ -37,7 +37,7 @@ module.exports = function (a) {
   }
 
   function sayGreeting(username, language) {
-    setName(value);
+    setName(username  );
     setLanguage(language);
     
     if (lang === "isixhosa")

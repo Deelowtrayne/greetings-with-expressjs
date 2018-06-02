@@ -1,3 +1,4 @@
+"use strict";
 const express = require('express');
 var app = express();
 var exphb = require('express-handlebars');
@@ -19,19 +20,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get("/", function(req, res){
-    var name = req.body.nameInput;
-    greeting.
-    res.render('home', {message:name });
+    res.render('home');
 });
 
-app.post("/greetings", function(req, res){
-    var name = message = req.body.nameInput;
-    res.redirect('/greetings/' + name);
+app.post('/greet', function(req, res){
+    let name = req.body.nameInput;
+    let lang = req.body.languageRadio;
+    greeting.greet(name, lang);
+    res.redirect('/greeting/' + name);
 });
 
-app.get("/greetings/:name", function(req, res){
-    var message = req.params.name;
-    res.render('home', {message});
+app.post("/greeting", function(req, res){
+    let name = message = req.body.nameInput;
+    res.redirect('/greeting/' + name);
+});
+
+app.get("/greeting/:name", function(req, res){
+    let name = req.params.name;
+    let lang = greeting.userLang();
+    let message = greeting.greet(name, lang);
+    let counter = greeting.counter();
+    res.render('home', {message, counter});
 });
 
 app.listen(PORT, function (err) {

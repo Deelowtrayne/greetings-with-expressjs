@@ -3,7 +3,7 @@
         <h1>Mzantsi Greetings</h1>
     </header>
     <div class="main">
-        <form action="/greetings" method="post">
+        <form action="/greet" method="post">
             <div class="row ">
                 <label for="nameInput">Name:</label>
                 <input class="nameInput" type="text" name="nameInput">
@@ -35,8 +35,8 @@
                 {{message}}
             </div>
             <div class="counter">
-                Greetings:
-                <span class="counterVal"></span>
+                Greetings: 
+                <span class="counterVal">{{counter}}</span>
             </div>
         </div>
     </div>
