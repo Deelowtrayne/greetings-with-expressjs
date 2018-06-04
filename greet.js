@@ -1,31 +1,19 @@
-module.exports = function (a) {
-  var name = "";
-  var lang = "";
+"use strict";
+module.exports = function () {
   var nameList = {};
 
   function setName(value) {
     if (value) {
       if (nameList[value] == undefined) {
-        nameList[name] = 0;
+        nameList[value] = 0;
       }
-      name = value;
+      nameList[value]++;
+      return value;
     }
-  }
-
-  function setLanguage(value) {
-    lang = value;
   }
 
   function resetMap() {
     nameList = {};
-  }
-
-  function getName() {
-    return name;
-  }
-
-  function getLanguage() {
-    return lang;
   }
 
   function getNames() {
@@ -37,26 +25,19 @@ module.exports = function (a) {
   }
 
   function sayGreeting(username, language) {
-    setName(username  );
-    setLanguage(language);
-    
-    if (lang === "isixhosa")
+    let name = setName(username);
+    if (language === "isixhosa")
       return "Molo, " + name;
-    else if (lang === "english")
+    else if (language === "english")
       return "Hello, " + name;
-    else if (lang === "afrikaans")
+    else if (language === "afrikaans")
       return "More, " + name;
   }
 
   return {
-    name: setName,
-    language: setLanguage,
     names: getNames,
     counter: getNamesLength,
     greet: sayGreeting,
-    //get name and languageRadio
-    userName: getName,
-    userLang: getLanguage,
     reset: resetMap
   }
 }

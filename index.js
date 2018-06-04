@@ -12,7 +12,18 @@ const bodyParser = require('body-parser');
 
 app.use(express.static('public'));
 // handlebars
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main',
+    helpers: {
+        'times': function(){
+            if (this === 1) {
+                return ' has only been greeted once.'; 
+            }
+            return ' has been greeted ' + this + ' times.';
+        },
+    }
+}));
+
 app.set('view engine', 'handlebars');
 
 //middleware
@@ -20,27 +31,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get("/", function(req, res){
-    res.render('home');
+    let counter = greeting.counter();
+    res.render('home', {counter});
 });
 
-app.post('/greet', function(req, res){
+app.post('/greeting', function(req, res){
     let name = req.body.nameInput;
     let lang = req.body.languageRadio;
-    greeting.greet(name, lang);
-    res.redirect('/greeting/' + name);
+    let context = {
+        message: greeting.greet(name, lang),
+        counter: greeting.counter(),
+    }
+    res.render('home', context);
 });
 
-app.post("/greeting", function(req, res){
-    let name = message = req.body.nameInput;
-    res.redirect('/greeting/' + name);
+app.get("/greetings", function(req, res){
+    let users = greeting.names();
+    res.render('greetings', {users});
 });
-
-app.get("/greeting/:name", function(req, res){
+// greeting with a URL
+app.get("/greeting/:name/:language", function(req, res){
     let name = req.params.name;
-    let lang = greeting.userLang();
-    let message = greeting.greet(name, lang);
-    let counter = greeting.counter();
-    res.render('home', {message, counter});
+    let lang = req.params.language;
+    let context = {
+        message: greeting.greet(name, lang),
+        counter: greeting.counter(),
+    }
+    res.render('home', context);
 });
 
 app.listen(PORT, function (err) {
