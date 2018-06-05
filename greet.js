@@ -1,31 +1,34 @@
 "use strict";
-module.exports = function () {
-  var nameList = {};
-
-  function setName(value) {
-    if (value) {
-      if (nameList[value] == undefined) {
-        nameList[value] = 0;
+module.exports = function (pool) {
+ 
+  async function setName(value) {
+    if (value && value !== '') {
+      let result = await pool.query('SELECT * FROM users WHERE first_name=$1', [value]);
+      if (result.rowCount === 0) {
+        await pool.query('INSERT INTO users(first_name, greet_count) values($1, 1)', [value]);
       }
-      nameList[value]++;
+      await pool.query('UPDATE users SET greet_count=greet_count+1 WHERE first_name=$1', [value]);
       return value;
     }
   }
 
-  function resetMap() {
-    nameList = {};
+  async function resetMap() {
+    return pool.query('DELETE * FROM users');
   }
 
-  function getNames() {
-    return nameList;
+  async function getNames() {
+    return await pool.query('SELECT * FROM users');
   }
 
-  function getNamesLength() {
-    return Object.keys(nameList).length;
+  async function getNamesLength() {
+    let result = await pool.query('SELECT * FROM users');
+    return result.rowCount;
   }
 
   function sayGreeting(username, language) {
+    // validate name
     let name = setName(username);
+
     if (language === "isixhosa")
       return "Molo, " + name;
     else if (language === "english")
