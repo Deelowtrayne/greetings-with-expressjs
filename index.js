@@ -4,6 +4,11 @@ var app = express();
 var exphb = require('express-handlebars');
 
 const PORT = process.env.PORT || 3333;
+
+const useSSL = false;
+if (process.env.DATABASE_URL){
+    useSSL = true;
+}
 const connectionString = process.env.DATABASE_URL || 'postgresql://luvuyo:coder123@localhost:5432/Greetings';
 
 const pg = require('pg');
