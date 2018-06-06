@@ -4,14 +4,12 @@ var app = express();
 var exphb = require('express-handlebars');
 
 const PORT = process.env.PORT || 3333;
-//const connectionString = process.env.DATABASE_URL
+const connectionString = process.env.DATABASE_URL || 'postgresql://luvuyo:coder123@localhost:5432/Greetings';
 
 const pg = require('pg');
 const Pool = pg.Pool;
 
-const pool = new Pool({
-    connectionString: 'postgresql://luvuyo:coder123@localhost:5432/Greetings'
-});
+const pool = new Pool({ connectionString });
 
 let Greeting = require('./greet');
 const greeting = Greeting(pool);
@@ -26,11 +24,11 @@ app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers: {
         'times': function () {
-            if (this === 1) {
+            if (this.greet_count === 1) {
                 return ' has only been greeted once.';
             }
             return ' has been greeted ' + this.greet_count + ' times.';
-        },
+        }
     }
 }));
 
@@ -40,41 +38,52 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", async function (req, res) {
-    let counter = greeting.counter();
-    res.render('home', { counter });
+app.get("/", async function (req, res, next) {
+    try {
+      res.render('home', {
+        counter: await greeting.counter()
+      });
+    } catch (err) {
+        next(err);
+    }
 });
 
-app.post('/greeting', async function (req, res) {
-    let name = req.body.nameInput;
-    let lang = req.body.languageRadio;
-    let context = {
-        message: greeting.greet(name, lang),
-        counter: greeting.counter(),
+app.post("/greeting", async function (req, res, next) {
+    try {
+      let name = req.body.nameInput;
+      let lang = req.body.languageRadio;
+      res.render('home', {
+          message: await greeting.greet(name, lang),
+          counter: await greeting.counter(),
+      });
+    } catch(err) {
+      return next(err);
     }
-    res.render('home', context);
+});
+
+// greeting with a URL
+app.get("/greeting/:name/:language", async function (req, res, next) {
+    try {
+      let name = req.params.name;
+      let lang = req.params.language;
+      res.render('home', {
+          message: await greeting.greet(name, lang),
+          counter: await greeting.counter(),
+      });
+    } catch (err) {
+      return next(err)
+    }
 });
 
 app.get("/greetings", async function (req, res, next) {
-    // let users = greeting.names();
     try {
-        let result = await pool.query('select * from users');
-        let users = result.rows;
-        res.render('greetings', { users });
+        res.render('greetings', {
+          users: await greeting.names()
+        });
     }
     catch (err) {
         return next(err);
     }
-});
-// greeting with a URL
-app.get("/greeting/:name/:language", function (req, res) {
-    let name = req.params.name;
-    let lang = req.params.language;
-    let context = {
-        message: greeting.greet(name, lang),
-        counter: greeting.counter(),
-    }
-    res.render('home', context);
 });
 
 app.listen(PORT, function (err) {
