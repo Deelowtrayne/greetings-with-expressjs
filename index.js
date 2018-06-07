@@ -5,7 +5,7 @@ var exphb = require('express-handlebars');
 
 const PORT = process.env.PORT || 3333;
 
-const useSSL = false;
+let useSSL = false;
 if (process.env.DATABASE_URL){
     useSSL = true;
 }
