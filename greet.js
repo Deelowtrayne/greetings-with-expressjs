@@ -2,7 +2,8 @@
 module.exports = function (pool) {
 
   async function resetMap() {
-    return pool.query('DELETE * FROM users');
+    let result = await pool.query('TRUNCATE TABLE users');
+    return result.rows;
   }
 
   async function getNames() {

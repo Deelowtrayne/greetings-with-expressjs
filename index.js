@@ -9,7 +9,7 @@ let useSSL = false;
 if (process.env.DATABASE_URL){
     useSSL = true;
 }
-const connectionString = process.env.DATABASE_URL || 'postgresql://luvuyo:coder123@localhost:5432/Greetings';
+const connectionString = process.env.DATABASE_URL || 'postgresql://coder:coder123@localhost:5432/Greetings';
 
 const pg = require('pg');
 const Pool = pg.Pool;
@@ -94,6 +94,14 @@ app.get("/greetings", async function (req, res, next) {
     }
 });
 
+app.get("/clear-data", async function(req, res, next){
+    try {
+        await greeting.reset();
+        res.redirect("/");
+    } catch (err) {
+        return next(err);
+    }
+});
 app.listen(PORT, function (err) {
     console.log('App starting on port', PORT);
 });

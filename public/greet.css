@@ -72,7 +72,13 @@ a:hover {
 
 .btn:hover { cursor: pointer; }
 .btnGreeting { background: #5cb85c; }
-.btnClear { background: #d9534f;}
+.btnClear { 
+  font-size: 1.5rem;
+  margin-left: 2rem;
+}
+.btnClear:hover { 
+  font-size: 2rem;
+}
 
 .display-section {
   padding: 1rem;
