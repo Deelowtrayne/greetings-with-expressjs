@@ -21,11 +21,11 @@ module.exports = function (pool) {
       return;
     }
 
-    let result = await pool.query('SELECT * FROM users WHERE first_name=$1', [name]);
+    let result = await pool.query('SELECT * FROM users WHERE first_name=$1 LIMIT 1', [name]);
     if (result.rowCount === 0) {
       await pool.query('INSERT INTO users(first_name, greet_count) values ($1, 1)', [name]);
     }
-    await pool.query('UPDATE users SET greet_count=greet_count+1 WHERE first_name=$1', [name]);
+    await pool.query('UPDATE users SET greet_count=greet_count+1 WHERE first_name=$1 LIMIT 1', [name]);
 
     if (language === "isixhosa"){
       return "Molo, " + name;
