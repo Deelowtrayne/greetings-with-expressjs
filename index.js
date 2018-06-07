@@ -14,7 +14,10 @@ const connectionString = process.env.DATABASE_URL || 'postgresql://luvuyo:coder1
 const pg = require('pg');
 const Pool = pg.Pool;
 
-const pool = new Pool({ connectionString });
+const pool = new Pool({ 
+    connectionString,
+    ssl: useSSL
+});
 
 let Greeting = require('./greet');
 const greeting = Greeting(pool);
